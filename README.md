@@ -28,16 +28,18 @@ yarn add -D tailwindcss@latest postcss@latest autoprefixer@latest
 
 <br />
 
-#### 3. Create `tailwind.config.js` with npx.
+#### 3. Create `tailwind.config.js` with npx. (`-p` flag generates `postcss.config.js`)
 
 ```sh
-npx tailwindcss init
+npx tailwindcss init -p
 ```
 
-There will be `tailwind.config.js` in the root directory.
+There will be `tailwind.config.js` in the root directory.    
+(+ You could use [Tailwind JIT Compiler](https://tailwindcss.com/docs/just-in-time-mode), which is new feature of tailwindcss introduced in March 2021, just by adding `mode: 'jit'` option to the config file.)
 
 ```javascript
 module.exports = {
+  mode: "jit",
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -47,6 +49,16 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+};
+```
+
+And also `postcss.config.js`.
+```javascript
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
 };
 ```
 
@@ -62,20 +74,7 @@ module.exports = {
 
 <br />
 
-#### 5. Create `postcss.config.js` for using tailwindcss.
-
-```javascript
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-};
-```
-
-<br />
-
-#### 6. Install storybook.
+#### 5. Install storybook.
 
 ```sh
 yarn add -D @storybook/react @storybook/addon-essentials @storybook/addon-actions
@@ -83,7 +82,7 @@ yarn add -D @storybook/react @storybook/addon-essentials @storybook/addon-action
 
 <br />
 
-#### 7. add srotybook script in `package.json`
+#### 6. add srotybook script in `package.json`
 
 ```json
 "scripts": {
@@ -97,7 +96,7 @@ yarn add -D @storybook/react @storybook/addon-essentials @storybook/addon-action
 
 <br />
 
-#### 8. Create `.storybook/main.js`
+#### 7. Create `.storybook/main.js`
 
 ```javascript
 module.exports = {
@@ -107,7 +106,7 @@ module.exports = {
 
 <br />
 
-#### 9. create `.storybook/preview.js`
+#### 8. create `.storybook/preview.js`
 
 ```javascript
 import "../src/styles/tailwind.css";
@@ -119,7 +118,7 @@ export const parameters = {
 
 <br />
 
-#### 10. Create sample component `src/component/SampleBox.js`, which uses tailwindcss.
+#### 9. Create sample component `src/component/SampleBox.js`, which uses tailwindcss.
 
 ```javascript
 import React from "react";
@@ -135,7 +134,7 @@ export const SampleBox = ({ children }) => {
 
 <br />
 
-#### 11. Create `src/component/SampleBox.stories.js`, which gives children to Flex component
+#### 10. Create `src/component/SampleBox.stories.js`, which gives children to Flex component
 
 ```javascript
 import React from "react";
