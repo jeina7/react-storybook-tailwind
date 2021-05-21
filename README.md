@@ -1,70 +1,246 @@
-# Getting Started with Create React App
+# Storybook + PostCSS 8 + TailwindCSS 2
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+In May 2021, Tailwind 2 and Storybook 6 has different compatibility of PostCSS.  
+(Tailwind 2 uses PostCSS 8 and Storybook 6 uses PostCSS 7.)
 
-## Available Scripts
+There introduced some ways to make the project without compatibility problems.
 
-In the project directory, you can run:
+<br />
 
-### `yarn start`
+## Create the Project
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### 1. Create the sample project with create-react-app.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```sh
+npx create-react-app storybook-tailwindcss
+cd storybook-tailwindcss
+```
 
-### `yarn test`
+<br />
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 2. Install tailwindcss.
 
-### `yarn build`
+```sh
+yarn add -D tailwindcss@latest postcss@latest autoprefixer@latest
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br />
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### 3. Create `tailwind.config.js` with npx.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```sh
+npx tailwindcss init
+```
 
-### `yarn eject`
+There will be `tailwind.config.js` in the root directory.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```javascript
+module.exports = {
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<br />
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### 4. Create `src/styles/tailwind.css`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
 
-## Learn More
+<br />
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### 5. Create `postcss.config.js` for using tailwindcss.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
 
-### Code Splitting
+<br />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### 6. Install storybook.
 
-### Analyzing the Bundle Size
+```sh
+yarn add -D @storybook/react @storybook/addon-essentials @storybook/addon-actions
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<br />
 
-### Making a Progressive Web App
+#### 7. add srotybook script in `package.json`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```json
+"scripts": {
+  "start": "react-scripts start",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject",
+  "storybook": "start-storybook -p 6006"
+},
+```
 
-### Advanced Configuration
+<br />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#### 8. Create `.storybook/main.js`
 
-### Deployment
+```javascript
+module.exports = {
+  stories: ["../src/**/*stories.@(js|jsx|ts|tsx)"],
+};
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+<br />
 
-### `yarn build` fails to minify
+#### 9. create `.storybook/preview.js`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```javascript
+import "../src/styles/tailwind.css";
+
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+};
+```
+
+<br />
+
+#### 10. Create sample component `src/component/SampleBox.js`, which uses tailwindcss.
+
+```javascript
+import React from "react";
+
+export const SampleBox = ({ children }) => {
+  return (
+    <div className="flex text-red-400 border-2 w-24 justify-center">
+      {children}
+    </div>
+  );
+};
+```
+
+<br />
+
+#### 11. Create `src/component/SampleBox.stories.js`, which gives children to Flex component
+
+```javascript
+import React from "react";
+
+import { SampleBox } from "./SampleBox";
+
+export default {
+  title: "Example/SampleBox",
+  component: SampleBox,
+};
+
+const Template = (args) => <SampleBox {...args} />;
+
+export const Primary = Template.bind({});
+Primary.args = {
+  children: "hello",
+};
+```
+
+<br />
+
+## Bug
+
+At this point, if you execute storybook with `yarn storybook`, it occurs the PostCSS error,
+
+```
+Error: PostCSS plugin tailwindcss requires PostCSS 8.
+```
+
+even if we have PostCSS in version of 8 in `package.json`.
+
+```json
+"devDependencies": {
+  "@storybook/addon-actions": "^6.2.9",
+  "@storybook/addon-essentials": "^6.2.9",
+  "@storybook/addon-links": "^6.2.9",
+  "@storybook/node-logger": "^6.2.9",
+  "@storybook/preset-create-react-app": "^3.1.7",
+  "@storybook/react": "^6.2.9",
+  "autoprefixer": "^10.2.5",
+  "postcss": "^8.3.0",
+  "tailwindcss": "^2.1.2"
+}
+```
+
+<br />
+
+## Solutions
+
+### Option 1: Easiest and lightest, but not stable
+
+Just install postcss-loader with version 4, and that's it. (postcss-loader with version 5 causes error)
+
+```
+yarn add -D postcss-loader@^4.1.0
+```
+
+<br />
+
+### Option 2: Using storybook's addon (🌟 Recommended )
+
+Storybook supports PostCSS 8+ with `@storybook/addon-postcss`. Details introduced [here](https://storybook.js.org/addons/@storybook/addon-postcss).
+
+#### 1. Install addon
+
+```
+yarn add -D @storybook/addon-postcss
+```
+
+#### 2. Edit options in `.storybook/main.js` to use addon
+
+```javascript
+module.exports = {
+  stories: ["../src/**/*stories.@(js|jsx|ts|tsx)"],
+  addons: [
+    "@storybook/addon-essentials",
+    {
+      name: "@storybook/addon-postcss",
+      options: {
+        postcssLoaderOptions: {
+          implementation: require("postcss"),
+        },
+      },
+    },
+  ],
+};
+```
+
+<br />
+
+### Option 3: Using PostCSS 7 🥲
+
+You could downgrade PostCSS to version 7, with using `@tailwindcss/postcss7-compat`. Details introduced [here](https://tailwindcss.com/docs/installation#post-css-7-compatibility-build).
+
+```
+yarn remove tailwindcss postcss autoprefixer
+yarn add -D tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+```
+
+<br />
+
+## Use Storybook with Tailwind 2
+
+Now you can use storybook with fully operating tailwind.
+
+```
+yarn storybook
+```
+
+<img width="1344" alt="image" src="https://user-images.githubusercontent.com/38656148/119147310-6c486580-ba86-11eb-822c-d695dc976ce1.png">
