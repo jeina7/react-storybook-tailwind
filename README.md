@@ -35,8 +35,6 @@ npx tailwindcss init -p
 ```
 
 There will be `tailwind.config.js` in the root directory.    
-(+ You could use [Tailwind JIT Compiler](https://tailwindcss.com/docs/just-in-time-mode), which is new feature of tailwindcss introduced in March 2021, just by adding `mode: 'jit'` option to the config file.)
-
 ```javascript
 module.exports = {
   mode: "jit",
@@ -51,6 +49,9 @@ module.exports = {
   plugins: [],
 };
 ```
+(+ You could use [Tailwind JIT Compiler](https://tailwindcss.com/docs/just-in-time-mode), which is new feature of tailwindcss introduced in March 2021, just by adding `mode: 'jit'` option to the config file.).  
+
+
 
 And also `postcss.config.js`.
 ```javascript
