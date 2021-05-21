@@ -2,7 +2,8 @@
 
 Tailwind 2 and Storybook 6 has different compatibility of PostCSS - Tailwind 2 uses PostCSS 8 and Storybook 6 uses PostCSS 7.
 
-This repository introduces some ways to make the project without compatibility problems. (Especially about the error: `Error: PostCSS plugin tailwindcss requires PostCSS 8.`)
+This repository introduces some ways to make the project without compatibility problems.     
+(Especially about the error: `Error: PostCSS plugin tailwindcss requires PostCSS 8.`)
 
 <br />
 
