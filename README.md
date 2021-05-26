@@ -35,7 +35,7 @@ npx tailwindcss init -p
 There will be `tailwind.config.js` in the root directory.    
 ```javascript
 module.exports = {
-  mode: "jit",
+  mode: "jit", // enabling Jist In Time Compiler engine
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
